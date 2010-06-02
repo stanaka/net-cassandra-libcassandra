@@ -1,0 +1,8 @@
+Changes
+libcassandra.xs
+Makefile.PL
+MANIFEST
+ppport.h
+README
+t/Net-Cassandra-libcassandra.t
+lib/Net/Cassandra/libcassandra.pm

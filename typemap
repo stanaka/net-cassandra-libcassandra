@@ -1,0 +1,179 @@
+TYPEMAP
+Cassandra * O_OBJECT
+CassandraClient * O_OBJECT
+Keyspace * O_OBJECT
+ColumnPath * O_OBJECT
+Column * O_OBJECT
+SuperColumn * O_OBJECT
+ColumnVector T_COLUMN_VECTOR
+ColumnOrSuperColumnVector T_COLUMN_OR_SUPER_COLUMN_VECTOR
+ColumnParent * O_OBJECT
+const ColumnParent * O_OBJECT
+SlicePredicate * O_OBJECT
+const ColumnPath * O_OBJECT
+StringSet T_STRING_SET
+StringMap T_STRING_MAP
+string T_STDSTRING
+const string T_STDSTRING
+
+INPUT
+T_STDSTRING
+  $var = string(SvPV_nolen($arg));
+
+T_STRING_SET
+    {
+        AV  *av;
+        I32 len;
+        StringSet t_sv;
+        if(SvROK($arg) && SvTYPE(SvRV($arg)) == SVt_PVAV){
+            av  = (AV *)SvRV($arg);
+            len = av_len(av) + 1;
+            if(len == 0){
+                warn(\"${Package}::$func_name() -- $var is empty array reference\");
+                XSRETURN_UNDEF;
+            }
+
+        } else {
+            warn(\"${Package}::$func_name() -- $var is not a array reference\");
+            XSRETURN_UNDEF;
+        }
+        for (I32 i = 0; i < len; i++) {
+            t_sv.push_back(string(SvPV_nolen(*av_fetch(av, i, 0))));
+        }
+        $var = t_sv;
+    }
+
+T_COLUMN_VECTOR
+    {
+        AV  *av;
+        I32 len;
+        ColumnVector t_sv;
+        if(SvROK($arg) && SvTYPE(SvRV($arg)) == SVt_PVAV){
+            av  = (AV *)SvRV($arg);
+            len = av_len(av) + 1;
+            if(len == 0){
+                warn(\"${Package}::$func_name() -- $var is empty array reference\");
+                XSRETURN_UNDEF;
+            }
+
+        } else {
+            warn(\"${Package}::$func_name() -- $var is not a array reference\");
+            XSRETURN_UNDEF;
+        }
+        for (I32 i = 0; i < len; i++) {
+            t_sv.push_back(string(SvPV_nolen(*av_fetch(av, i, 0))));
+        }
+        $var = t_sv;
+    }
+
+T_COLUMN_OR_SUPER_COLUMN_VECTOR
+    {
+        AV  *av;
+        I32 len;
+        ColumnOrSuperColumnVector t_sv;
+        if(SvROK($arg) && SvTYPE(SvRV($arg)) == SVt_PVAV){
+            av  = (AV *)SvRV($arg);
+            len = av_len(av) + 1;
+            if(len == 0){
+                warn(\"${Package}::$func_name() -- $var is empty array reference\");
+                XSRETURN_UNDEF;
+            }
+
+        } else {
+            warn(\"${Package}::$func_name() -- $var is not a array reference\");
+            XSRETURN_UNDEF;
+        }
+        for (I32 i = 0; i < len; i++) {
+            t_sv.push_back(string(SvPV_nolen(*av_fetch(av, i, 0))));
+        }
+        $var = t_sv;
+    }
+
+T_STRING_MAP
+    {
+        HV *hv;
+        HE *he;
+        StringMap t_sm;
+        if(SvROK($arg) && SvTYPE(SvRV($arg)) == SVt_PVHV) {
+            hv = (HV *)SvRV($arg);
+            if(hv_iterinit(hv) == 0) {
+                warn(\"${Package}::$func_name() -- $var is empty hash reference\");
+                XSRETURN_UNDEF;
+            }  
+        } else {
+            warn(\"${Package}::$func_name() -- $var is not a hash reference\");
+            XSRETURN_UNDEF;
+        }
+
+        while((he = hv_iternext(hv)) != NULL) {
+            SV *svkey = HeSVKEY_force(he);
+            SV *svval = HeVAL(he);
+            //SV *svkey = hv_iterkeysv(he);
+            //SV *svval = hv_iterval(hv, he);
+            t_sm.insert(StringMap::value_type(string(SvPV_nolen(svkey)), string(SvPV_nolen(svval))));
+        }
+     $var = t_sm;
+
+
+OUTPUT
+T_STDSTRING
+  sv_setpvn($arg, $var.c_str(), $var.size());
+
+T_STRING_SET
+    {
+        if($var.empty()){
+            warn(\"${Package}::$func_name() -- set is empty\");
+            XSRETURN_UNDEF;
+        }
+
+        AV *av = (AV *)sv_2mortal((SV *)newAV());
+        for(StringSetIt it = $var.begin(); it != $var.end(); it++) {
+            av_push(av, newSVpvn(it->c_str(), it->size()));
+        }
+        SvSetSV($arg, newRV_noinc((SV *)av));
+    }
+
+T_COLUMN_VECTOR
+    {
+        if($var.empty()){
+            warn(\"${Package}::$func_name() -- set is empty\");
+            XSRETURN_UNDEF;
+        }
+
+        AV *av = (AV *)sv_2mortal((SV *)newAV());
+	for(ColumnVectorIt it = $var.begin(); it != $var.end(); it++) {
+            SV *sv;
+	    sv_setref_pv( sv, "org::apache::cassandra::Column", &it );
+            av_push(av, sv);
+        }
+        SvSetSV($arg, newRV_noinc((SV *)av));
+    }
+
+T_COLUMN_OR_SUPER_COLUMN_VECTOR
+    {
+        if($var.empty()){
+            warn(\"${Package}::$func_name() -- set is empty\");
+            XSRETURN_UNDEF;
+        }
+
+        AV *av = (AV *)sv_2mortal((SV *)newAV());
+	for(ColumnOrSuperColumnVectorIt it = $var.begin(); it != $var.end(); it++) {
+            SV *sv;
+	    sv_setref_pv( sv, "org::apache::cassandra::Column", &it );
+            av_push(av, sv);
+        }
+        SvSetSV($arg, newRV_noinc((SV *)av));
+    }
+
+T_STRING_MAP
+    {
+        if($var.empty()){
+            warn(\"${Package}::$func_name() -- map is empty\");
+            XSRETURN_UNDEF;
+        }
+        HV *hv = (HV *)sv_2mortal((SV *)newHV());
+        for(StringMapIt it = $var.begin(); it != $var.end(); it++) {
+            hv_store(hv, (it->first).c_str(), (it->first).size(), newSVpvn((it->second).c_str(), (it->second).size()), 0);
+        }
+        SvSetSV($arg, newRV_noinc((SV *)hv));
+    }

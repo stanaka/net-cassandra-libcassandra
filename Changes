@@ -1,0 +1,6 @@
+Revision history for Perl extension Net::Cassandra::libcassandra.
+
+0.01  Tue Jun  1 15:01:56 2010
+	- original version; created by h2xs 1.23 with options
+		-A -n Net::Cassandra::libcassandra
+
