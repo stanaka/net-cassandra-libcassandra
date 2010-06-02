@@ -3,6 +3,7 @@ package Net::Cassandra::libcassandra;
 use 5.008008;
 use strict;
 use warnings;
+use Net::Cassandra::libcassandra::Keyspace;
 
 require Exporter;
 
@@ -38,49 +39,44 @@ __END__
 
 =head1 NAME
 
-Net::Cassandra::libcassandra - Perl extension for blah blah blah
+Net::Cassandra::libcassandra - Perl binding for Cassandra with libcassandra.
 
 =head1 SYNOPSIS
 
   use Net::Cassandra::libcassandra;
-  blah blah blah
+
+  my $cassandra = Net::Cassandra::libcassandra::new('localhost', 9160);
+
+  warn $cassandra->getClusterName();
+  warn $cassandra->getKeyspaces();
+  warn $cassandra->getTokenMap(0);
+
+  my $keyspace = $cassandra->getKeyspace("Keyspace1");
+  warn $keyspace->getName();
+  $keyspace->insertColumn("aa", "Standard1", "cc", "dd");
+
+  my $res = $keyspace->getColumnValue("aa", "Standard1", "cc");
+  warn "Value in column retrieved is: ". $res;
 
 =head1 DESCRIPTION
 
-Stub documentation for Net::Cassandra::libcassandra, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
-
-Blah blah blah.
-
-=head2 EXPORT
-
-None by default.
-
-
+This module provides a Perl interface to Cassandra via libcassandra.
+It uses XS for communicating with libcassandra.
 
 =head1 SEE ALSO
 
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
-
-If you have a mailing list set up for your module, mention it here.
-
-If you have a web site set up for your module, mention it here.
+Net::Cassandra, Net::Cassandra::Easy
 
 =head1 AUTHOR
 
-A. U. Thor, E<lt>stanaka@osuosl.orgE<gt>
+Shinji Tanaka <shinji.tanaka@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2010 by A. U. Thor
+Copyright (C) 2010 by Shinji Tanaka
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.8 or,
 at your option, any later version of Perl 5 you may have available.
-
 
 =cut

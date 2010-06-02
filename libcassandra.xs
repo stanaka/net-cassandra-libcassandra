@@ -67,7 +67,7 @@ CODE:
 
   transport->open(); /* throws an exception */
 
-  char *CLASS = "Net::Cassandra::libcassandra";
+  const char *CLASS = "Net::Cassandra::libcassandra";
   RETVAL = new Cassandra(client, in_host, in_port);
 OUTPUT:
   RETVAL
@@ -84,7 +84,7 @@ Cassandra::getTokenMap(bool fresh)
 Keyspace *
 Cassandra::getKeyspace(const string name)
 CODE:
-  char *CLASS = "Net::Cassandra::libcassandra::Keyspace";
+  const char *CLASS = "Net::Cassandra::libcassandra::Keyspace";
   RETVAL = THIS->getKeyspace(name);
 OUTPUT:
   RETVAL
@@ -122,7 +122,7 @@ CODE:
 Column *
 xs_cassandra_keyspace_getColumn(Keyspace *ks, const string key, const string column_family, const string super_column_name, const string column_name)
 CODE:
-  char *CLASS = "Net::Cassandra::libcassandra::Column";
+  const char *CLASS = "Net::Cassandra::libcassandra::Column";
   RETVAL = &(ks->getColumn(key, column_family, super_column_name, column_name));
 OUTPUT:
   RETVAL
@@ -130,7 +130,7 @@ OUTPUT:
 Column *
 xs_cassandra_keyspace_getColumn2(Keyspace *ks, const string key, const string column_family, const string column_name)
 CODE:
-  char *CLASS = "Net::Cassandra::libcassandra::Column";
+  const char *CLASS = "Net::Cassandra::libcassandra::Column";
   RETVAL = &(ks->getColumn(key, column_family, "", column_name));
 OUTPUT:
   RETVAL
@@ -138,14 +138,24 @@ OUTPUT:
 string
 xs_cassandra_keyspace_getColumnValue(Keyspace *ks, const string key, const string column_family, const string super_column_name, const string column_name)
 CODE:
-  RETVAL = ks->getColumnValue(key, column_family, super_column_name, column_name);
+  try {
+    RETVAL = ks->getColumnValue(key, column_family, super_column_name, column_name);
+  } catch(org::apache::cassandra::InvalidRequestException &e) {
+    croak("Exception");
+  }
 OUTPUT:
   RETVAL
 
 string
 xs_cassandra_keyspace_getColumnValue2(Keyspace *ks, const string key, const string column_family, const string column_name)
 CODE:
-  RETVAL = ks->getColumnValue(key, column_family, column_name);
+  try {
+    RETVAL = ks->getColumnValue(key, column_family, column_name);
+  //} catch(org::apache::cassandra::NotFoundException &e) {
+  } catch(TException e) {
+    //croak("NotFound");
+    croak(e.what());
+  }
 OUTPUT:
   RETVAL
 
