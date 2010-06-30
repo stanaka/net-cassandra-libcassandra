@@ -9,8 +9,8 @@ WriteMakefile(
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/Net/Cassandra/libcassandra.pm', # retrieve abstract from module
        AUTHOR         => 'A. U. Thor <stanaka@osuosl.org>') : ()),
-    #LIBS              => ['-lthrift -lcassandra'], # e.g., '-lm'
-    LIBS              => ['-lcassandra'], # e.g., '-lm'
+    LIBS              => ['-lthrift -lcassandra'], # e.g., '-lm'
+    #LIBS              => ['-lcassandra'], # e.g., '-lm'
     #LIBS              => ['-lthrift'], # e.g., '-lm'
     DEFINE            => '', # e.g., '-DHAVE_SOMETHING'
     INC               => '-I. -I/usr/include/thrift', # e.g., '-I. -I/usr/include/other'
