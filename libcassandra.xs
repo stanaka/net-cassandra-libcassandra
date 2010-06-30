@@ -92,38 +92,108 @@ OUTPUT:
 void
 xs_cassandra_keyspace_insertColumn(Keyspace *ks, const string key, const string column_family, const string super_column_name, const string column_name, const string value)
 CODE:
-  ks->insertColumn(key, column_family, super_column_name, column_name, value);
+  try {
+    ks->insertColumn(key, column_family, super_column_name, column_name, value);
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 
 void
 xs_cassandra_keyspace_insertColumn2(Keyspace *ks, const string key, const string column_family, const string column_name, const string value)
 CODE:
-  ks->insertColumn(key, column_family, column_name, value);
+  try {
+    ks->insertColumn(key, column_family, column_name, value);
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 
 void
 xs_cassandra_keyspace_remove(Keyspace *ks, const string key, const ColumnPath *col_path)
 CODE:
-  ks->remove(key, *col_path);
+  try {
+    ks->remove(key, *col_path);
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 
 void
 xs_cassandra_keyspace_remove2(Keyspace *ks, const string key, const string column_family, const string super_column_name, const string column_name)
 CODE:
-  ks->remove(key, column_family, super_column_name, column_name);
+  try {
+    ks->remove(key, column_family, super_column_name, column_name);
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 
 void
 xs_cassandra_keyspace_removeColumn(Keyspace *ks, const string key, const string column_family, const string super_column_name, const string column_name)
 CODE:
-  ks->remove(key, column_family, super_column_name, column_name);
+  try {
+    ks->remove(key, column_family, super_column_name, column_name);
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 
 void
 xs_cassandra_keyspace_removeSuperColumn(Keyspace *ks, const string key, const string column_family, const string super_column_name)
 CODE:
-  ks->remove(key, column_family, super_column_name, "");
+  try {
+    ks->remove(key, column_family, super_column_name, "");
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 
 Column *
 xs_cassandra_keyspace_getColumn(Keyspace *ks, const string key, const string column_family, const string super_column_name, const string column_name)
 CODE:
   const char *CLASS = "Net::Cassandra::libcassandra::Column";
-  RETVAL = &(ks->getColumn(key, column_family, super_column_name, column_name));
+  try {
+    RETVAL = &(ks->getColumn(key, column_family, super_column_name, column_name));
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 OUTPUT:
   RETVAL
 
@@ -131,7 +201,17 @@ Column *
 xs_cassandra_keyspace_getColumn2(Keyspace *ks, const string key, const string column_family, const string column_name)
 CODE:
   const char *CLASS = "Net::Cassandra::libcassandra::Column";
-  RETVAL = &(ks->getColumn(key, column_family, "", column_name));
+  try {
+    RETVAL = &(ks->getColumn(key, column_family, "", column_name));
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 OUTPUT:
   RETVAL
 
@@ -140,8 +220,14 @@ xs_cassandra_keyspace_getColumnValue(Keyspace *ks, const string key, const strin
 CODE:
   try {
     RETVAL = ks->getColumnValue(key, column_family, super_column_name, column_name);
-  } catch(org::apache::cassandra::InvalidRequestException &e) {
-    croak("Exception");
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
   }
 OUTPUT:
   RETVAL
@@ -151,10 +237,14 @@ xs_cassandra_keyspace_getColumnValue2(Keyspace *ks, const string key, const stri
 CODE:
   try {
     RETVAL = ks->getColumnValue(key, column_family, column_name);
-  //} catch(org::apache::cassandra::NotFoundException &e) {
-  } catch(TException e) {
-    //croak("NotFound");
-    croak(e.what());
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
   }
 OUTPUT:
   RETVAL
@@ -163,34 +253,84 @@ SuperColumn *
 xs_cassandra_keyspace_getSuperColumn(Keyspace *ks, const string key, const string column_family, const string super_column_name)
 CODE:
   char *CLASS = "Net::Cassandra::libcassandra::SuperColumn";
-  RETVAL = &(ks->getSuperColumn(key, column_family, super_column_name));
+  try {
+    RETVAL = &(ks->getSuperColumn(key, column_family, super_column_name));
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 OUTPUT:
   RETVAL
 
 ColumnVector
 xs_cassandra_keyspace_getSliceNames(Keyspace *ks, const string key, const ColumnParent *col_parent, SlicePredicate *pred)
 CODE:
-  RETVAL = ks->getSliceNames(key, *col_parent, *pred);
+  try {
+    RETVAL = ks->getSliceNames(key, *col_parent, *pred);
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 OUTPUT:
   RETVAL
 
 ColumnVector
 xs_cassandra_keyspace_getSliceRange(Keyspace *ks, const string key, const ColumnParent *col_parent, SlicePredicate *pred)
 CODE:
-  RETVAL = ks->getSliceRange(key, *col_parent, *pred);
+  try {
+    RETVAL = ks->getSliceRange(key, *col_parent, *pred);
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 OUTPUT:
   RETVAL
 
 int
 xs_cassandra_keyspace_getCount(Keyspace *ks, const string key, const ColumnParent *col_parent)
 CODE:
-  RETVAL = ks->getCount(key, *col_parent);
+  try {
+    RETVAL = ks->getCount(key, *col_parent);
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 OUTPUT:
   RETVAL
 
 string
 xs_cassandra_keyspace_getName(Keyspace *ks)
 CODE:
-  RETVAL = ks->getName();
+  try {
+    RETVAL = ks->getName();
+  } catch (InvalidRequestException &e) {
+    croak("InvalidRequestException");
+  } catch (UnavailableException &e) {
+    croak("UnavailableException");
+  } catch (TimedOutException &e) {
+    croak("TimedOutException");
+  } catch (TException &e) {
+    croak("TException");
+  }
 OUTPUT:
   RETVAL
