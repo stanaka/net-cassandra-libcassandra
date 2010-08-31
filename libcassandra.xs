@@ -65,8 +65,13 @@ CODE:
 
   CassandraClient *client= new(std::nothrow) CassandraClient(protocol);
 
-  transport->open(); /* throws an exception */
-
+  try {
+    transport->open(); /* throws an exception */
+  } catch (TTransportException &e) {
+    croak("TTransportException: %s", e.what());
+  } catch (TException &e) {
+    croak("TException: %s", e.what());
+  }
   const char *CLASS = "Net::Cassandra::libcassandra";
   RETVAL = new Cassandra(client, in_host, in_port);
 OUTPUT:
@@ -95,13 +100,17 @@ CODE:
   try {
     ks->insertColumn(key, column_family, super_column_name, column_name, value);
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 
 void
@@ -110,13 +119,17 @@ CODE:
   try {
     ks->insertColumn(key, column_family, column_name, value);
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 
 void
@@ -125,13 +138,17 @@ CODE:
   try {
     ks->remove(key, *col_path);
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 
 void
@@ -140,13 +157,17 @@ CODE:
   try {
     ks->remove(key, column_family, super_column_name, column_name);
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 
 void
@@ -155,13 +176,17 @@ CODE:
   try {
     ks->remove(key, column_family, super_column_name, column_name);
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 
 void
@@ -170,13 +195,17 @@ CODE:
   try {
     ks->remove(key, column_family, super_column_name, "");
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 
 Column *
@@ -186,13 +215,17 @@ CODE:
   try {
     RETVAL = &(ks->getColumn(key, column_family, super_column_name, column_name));
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 OUTPUT:
   RETVAL
@@ -204,13 +237,17 @@ CODE:
   try {
     RETVAL = &(ks->getColumn(key, column_family, "", column_name));
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 OUTPUT:
   RETVAL
@@ -221,13 +258,17 @@ CODE:
   try {
     RETVAL = ks->getColumnValue(key, column_family, super_column_name, column_name);
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 OUTPUT:
   RETVAL
@@ -238,13 +279,17 @@ CODE:
   try {
     RETVAL = ks->getColumnValue(key, column_family, column_name);
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 OUTPUT:
   RETVAL
@@ -256,13 +301,17 @@ CODE:
   try {
     RETVAL = &(ks->getSuperColumn(key, column_family, super_column_name));
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 OUTPUT:
   RETVAL
@@ -273,13 +322,17 @@ CODE:
   try {
     RETVAL = ks->getSliceNames(key, *col_parent, *pred);
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 OUTPUT:
   RETVAL
@@ -290,13 +343,17 @@ CODE:
   try {
     RETVAL = ks->getSliceRange(key, *col_parent, *pred);
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 OUTPUT:
   RETVAL
@@ -307,13 +364,17 @@ CODE:
   try {
     RETVAL = ks->getCount(key, *col_parent);
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 OUTPUT:
   RETVAL
@@ -324,13 +385,17 @@ CODE:
   try {
     RETVAL = ks->getName();
   } catch (InvalidRequestException &e) {
-    croak("InvalidRequestException");
+    croak("InvalidRequestException: %s", e.what());
   } catch (UnavailableException &e) {
-    croak("UnavailableException");
+    croak("UnavailableException: %s", e.what());
   } catch (TimedOutException &e) {
-    croak("TimedOutException");
+    croak("TimedOutException: %s", e.what());
+  } catch (TProtocolException &e) {
+    croak("TProtocolException: %s", e.what());
+  } catch (NotFoundException &e) {
+    croak("NotFoundException: %s", e.what());
   } catch (TException &e) {
-    croak("TException");
+    croak("TException: %s", e.what());
   }
 OUTPUT:
   RETVAL
